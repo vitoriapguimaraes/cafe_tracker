@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 60 30% 98%;
+    --foreground: 24 10% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 24 10% 15%;
+    --border: 24 5% 90%;
+  }
+
+  .dark {
+    --background: 24 10% 5%;
+    --foreground: 60 5% 90%;
+    --card: 24 10% 8%;
+    --card-foreground: 60 5% 95%;
+    --border: 24 5% 15%;
+  }
+}
+
+body {
+  @apply bg-background text-foreground transition-colors duration-300;
+}

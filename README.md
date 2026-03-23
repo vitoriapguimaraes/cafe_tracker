@@ -1,60 +1,67 @@
-# Nome do Projeto
+# Cafe - Controle Financeiro Compartilhado
 
-> Breve descrição do projeto em 2-3 frases, explicando o propósito, motivação e problema que resolve.
+## Visão Geral
 
-![Demonstração do sistema](link-para-gif-ou-imagem)
+Sistema de controle financeiro para casais, focado em redução de fricção e design premium.
 
-## Funcionalidades Principais
+- **Bot Telegram**: Para lançamentos rápidos de gastos (`/gasto 50 almoço`).
+- **Web Dashboard**: Para visualização clara de saldo, dívidas e metas.
 
-- Liste as principais funcionalidades do projeto.
-- Destaque o que é inovador ou diferencial.
+## Estrutura do Projeto
 
-## Resultados e Conclusões
+- `/bot`: Código em Python do Bot do Telegram.
+- `/web`: Dashboard desenvolvido em Next.js (React).
+- `/supabase`: Arquivos SQL para o banco de dados.
 
-(Quando conter no projeto. Geralmente utilizado para projetos de datascience)
+## Configuração Inicial
 
-## Tecnologias Utilizadas
+### 1. Banco de Dados (Supabase)
 
-- Liste as principais tecnologias, frameworks e bibliotecas.
+1. Crie um projeto no [Supabase](https://supabase.com/).
+2. Vá em **SQL Editor** e cole o conteúdo de `supabase/migrations/0000_initial_schema.sql`. Execute para criar as tabelas.
+3. Vá em **Settings > API** e copie a `Project URL` e a `anon public` Key.
 
-## Como Executar
+### 2. Bot do Telegram
 
-1. Clone o repositório:
+1. Fale com o [@BotFather](https://t.me/BotFather) no Telegram.
+2. Crie um novo bot com `/newbot`.
+3. Copie o **Token** gerado.
+
+### 3. Configuração de Variáveis
+
+1. Crie um arquivo `.env` na raiz do projeto (copie de `.env.example`).
+2. Preencha com os dados do Supabase e do Telegram.
+3. Crie um arquivo `web/.env.local` dentro da pasta `web`.
+
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL="Sua URL do Supabase"
+   NEXT_PUBLIC_SUPABASE_ANON_KEY="Sua Key anon do Supabase"
    ```
-   git clone https://github.com/usuario/repositorio.git
-   ```
-2. Instale as dependências:
-   ```
-   comando de instalação
-   ```
-3. Execute o projeto:
-   ```
-   comando para rodar
-   ```
 
-## Como Usar
+## Como Rodar
 
-- Explique como acessar e testar as principais funcionalidades.
-- Se necessário, inclua exemplos de uso ou prints.
+### Bot (Terminal 1)
 
-## Estrutura de Diretórios
+```bash
+# Instale as dependências (se ainda não fez)
+pip install -r bot/requirements.txt
 
+# Rode o bot
+python bot/main.py
 ```
-/nome-do-projeto
-├── src/
-├── data/
-├── results/
-└── README.md
+
+### Web Dashboard (Terminal 2)
+
+```bash
+cd web
+npm install
+npm run dev
 ```
 
-## Status
+Acesse `http://localhost:3000` para ver o dashboard.
 
-- ✅ Concluído
-- 🛠️ Em manutenção
-- 🚧 Em desenvolvimento
+## Uso
 
-> Veja as [issues abertas](https://github.com/usuario/repositorio/issues) para sugestões de melhorias e próximos passos.
-
-## Mais Sobre Mim
-
-Acesse os arquivos disponíveis na [Pasta Documentos](https://github.com/vitoriapguimaraes/vitoriapguimaraes/tree/main/DOCUMENTOS) para mais informações sobre minhas qualificações e certificações.
+- No Telegram, envie `/start` para começar.
+- Use `/gasto 50.00 mercado` para registrar uma despesa.
+- Acompanhe o saldo no Dashboard web.
