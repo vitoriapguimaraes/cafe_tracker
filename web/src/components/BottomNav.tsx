@@ -47,16 +47,16 @@ export default function BottomNav() {
         />
 
         <NavItem
-          href="/extrato"
+          href="/transactions"
           icon={Receipt}
           label="Extrato"
-          active={pathname === "/extrato"}
+          active={pathname === "/transactions"}
         />
 
         {/* Floating Add Button */}
         <div className="relative">
           <Link
-            href="/cadastrar"
+            href="/add"
             className="bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 w-14 h-14 rounded-2xl flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all border-4 border-background"
           >
             <Plus size={28} strokeWidth={3} />
@@ -64,17 +64,17 @@ export default function BottomNav() {
         </div>
 
         <NavItem
-          href="/contas"
+          href="/accounts"
           icon={Wallet}
           label="Contas"
-          active={pathname === "/contas"}
+          active={pathname === "/accounts"}
         />
 
         <NavItem
-          href="/configurar"
+          href="/settings"
           icon={Settings}
           label="Painel"
-          active={pathname === "/configurar"}
+          active={pathname === "/settings"}
         />
       </div>
     </nav>

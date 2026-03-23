@@ -8,11 +8,15 @@ import {
   TrendingUp,
   TrendingDown,
   Coffee,
+  Wallet,
+  ArrowRight
 } from "lucide-react";
 import { useCategories } from "../lib/hooks/useCategories";
 import { useTransactions } from "../lib/hooks/useTransactions";
 import { useBudgetSummary, BudgetStatus } from "../lib/hooks/useBudgetSummary";
 import { SkeletonCard } from "../components/Skeleton";
+import { PageContainer, PageHeader, SectionCard } from "../components/LayoutComponents";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 const MONTH_NAMES = [
   "Jan",
@@ -91,137 +95,159 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-background py-10 px-6 font-sans w-full overflow-x-hidden transition-colors duration-300">
-      <div className="max-w-[1400px] mx-auto w-full">
-        {/* Header */}
-        <header className="flex flex-col items-center mb-10 mt-2 text-center group">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-stone-400 mb-2 leading-none">
+    <PageContainer>
+      <PageHeader>
+        <div className="flex flex-col">
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-stone-400 mb-1 leading-none">
             Resumo · Precision Control
           </span>
-          <h1 className="font-black text-6xl md:text-7xl text-foreground tracking-tighter uppercase leading-[0.8] flex items-center justify-center gap-3">
-            Portal{" "}
-            <span className="text-stone-300 dark:text-stone-700">Cafe</span>
-            <Coffee className="w-12 h-12 md:w-16 md:h-16 text-stone-900 dark:text-stone-100 transition-transform group-hover:rotate-12" />
+          <h1 className="text-4xl font-black tracking-tighter uppercase text-foreground leading-[0.9] flex items-center gap-3">
+            Dashboard
+            <Coffee className="w-8 h-8 md:w-10 md:h-10 text-stone-900 dark:text-stone-100" />
           </h1>
-        </header>
+        </div>
+        <ThemeToggle />
+      </PageHeader>
 
-        <div className="flex flex-col gap-8">
-          {/* Top Row: Controls & Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Month Navigator */}
-            <div className="flex items-center justify-between bg-card rounded-2xl p-4 shadow-sm border border-border h-full">
-              <button
-                onClick={prevMonth}
-                className="p-2 hover:bg-background rounded-full transition-colors text-stone-400 hover:text-foreground"
+      <div className="flex flex-col gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <SectionCard variant="flat" className="p-4 flex items-center justify-between h-full hover:bg-stone-50/50 transition-colors">
+            <button
+              onClick={prevMonth}
+              className="p-2 hover:bg-background rounded-full transition-colors text-stone-400 hover:text-foreground"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <span className="font-bold text-foreground tracking-wider text-sm uppercase">
+              {MONTH_NAMES[viewMonth - 1]}/{viewYear}
+            </span>
+            <button
+              onClick={nextMonth}
+              className="p-2 hover:bg-background rounded-full transition-colors text-stone-400 hover:text-foreground"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </SectionCard>
+
+          <SectionCard variant="flat" className="p-5 flex flex-col justify-center gap-1">
+            <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400">
+              <TrendingUp size={16} />
+              <span className="text-[10px] font-bold uppercase tracking-wider">
+                Receita
+              </span>
+            </div>
+            <span className="font-mono font-bold text-foreground text-2xl">
+              {formatBRL(totalIncome)}
+            </span>
+          </SectionCard>
+
+          <SectionCard variant="flat" className="p-5 flex flex-col justify-center gap-1 text-rose-500 dark:text-rose-400">
+            <div className="flex items-center gap-2">
+              <TrendingDown size={16} />
+              <span className="text-[10px] font-bold uppercase tracking-wider">
+                Gastos
+              </span>
+            </div>
+            <span className="font-mono font-bold text-2xl">
+              {formatBRL(totalSpent)}
+            </span>
+          </SectionCard>
+        </div>
+
+        <div className="w-full">
+          {loading ? (
+            <SkeletonCard lines={6} />
+          ) : budgetSummary.length === 0 ? (
+            <SectionCard className="p-12 text-center">
+              <p className="text-stone-400 text-sm italic">
+                Nenhum orçamento configurado para este período.
+              </p>
+              <Link
+                href="/settings"
+                className="text-foreground font-bold text-sm underline mt-2 block hover:text-emerald-500 transition-colors"
               >
-                <ChevronLeft size={20} />
-              </button>
-              <span className="font-bold text-foreground tracking-wider text-sm uppercase">
-                {MONTH_NAMES[viewMonth - 1]}/{viewYear}
-              </span>
-              <button
-                onClick={nextMonth}
-                className="p-2 hover:bg-background rounded-full transition-colors text-stone-400 hover:text-foreground"
-              >
-                <ChevronRight size={20} />
-              </button>
-            </div>
-
-            {/* Income Summary */}
-            <div className="bg-card rounded-2xl p-5 shadow-sm border border-border flex flex-col justify-center gap-1">
-              <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400">
-                <TrendingUp size={16} />
-                <span className="text-[10px] font-bold uppercase tracking-wider">
-                  Receita
-                </span>
+                Configurar categorias →
+              </Link>
+            </SectionCard>
+          ) : (
+            <SectionCard className="p-8">
+              <div className="flex justify-between items-center mb-8 border-b border-border pb-4">
+                <h2 className="text-xl font-bold text-foreground uppercase tracking-tight">
+                  Orçamento Mensal
+                </h2>
+                <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider text-stone-400">
+                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400" /> ok</div>
+                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400" /> limite</div>
+                  <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-400" /> estourou</div>
+                </div>
               </div>
-              <span className="font-mono font-bold text-foreground text-2xl">
-                {formatBRL(totalIncome)}
-              </span>
-            </div>
 
-            {/* Spent Summary */}
-            <div className="bg-card rounded-2xl p-5 shadow-sm border border-border flex flex-col justify-center gap-1">
-              <div className="flex items-center gap-2 text-rose-400 dark:text-rose-300">
-                <TrendingDown size={16} />
-                <span className="text-[10px] font-bold uppercase tracking-wider">
-                  Gastos
-                </span>
-              </div>
-              <span className="font-mono font-bold text-foreground text-2xl">
-                {formatBRL(totalSpent)}
-              </span>
-            </div>
-          </div>
-
-          {/* Bottom Row: Budget Cards */}
-          <div className="w-full">
-            {loading ? (
-              <SkeletonCard lines={6} />
-            ) : budgetSummary.length === 0 ? (
-              <div className="bg-card rounded-3xl p-12 shadow-sm border border-border text-center">
-                <p className="text-stone-400 text-sm">
-                  Nenhum orçamento configurado.
-                </p>
-                <Link
-                  href="/configurar"
-                  className="text-foreground font-bold text-sm underline mt-2 block"
-                >
-                  Configurar categorias →
-                </Link>
-              </div>
-            ) : (
-              <section className="bg-card rounded-[2.5rem] p-8 shadow-xl border border-border transition-colors">
-                <div className="flex justify-between items-center mb-8 border-b border-border pb-4">
-                  <h2 className="text-xl font-bold text-foreground">
-                    Orçamento Mensal
-                  </h2>
-                  <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-wider text-stone-400">
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400" />{" "}
-                      ok
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
+                {budgetSummary.map((item) => (
+                  <div key={item.category.id} className="group">
+                    <div className="flex justify-between items-baseline mb-2">
+                      <p className="font-bold text-sm text-foreground opacity-80 flex items-center gap-2">
+                        <span className="text-lg">{item.category.icon}</span>
+                        {item.category.name}
+                      </p>
+                      <span className="text-[10px] text-stone-400 font-mono">
+                        {Math.round(item.percentage)}%
+                      </span>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-amber-400" />{" "}
-                      limite
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-red-400" />{" "}
-                      estourou
+                    <ProgressBar
+                      percentage={item.percentage}
+                      status={item.status}
+                    />
+                    <div className="flex justify-between items-center mt-2">
+                        <span className="text-[9px] font-mono text-stone-400">
+                            {formatBRL(item.spent)} / {formatBRL(item.limit)}
+                        </span>
+                        <p className={`text-[9px] font-black uppercase tracking-wider ${item.remaining < 0 ? "text-red-400" : "text-emerald-500"}`}>
+                        {item.remaining < 0
+                            ? `⚠️ -${formatBRL(Math.abs(item.remaining))}`
+                            : `${formatBRL(item.remaining)} disponível`}
+                        </p>
                     </div>
                   </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
-                  {budgetSummary.map((item) => (
-                    <div key={item.category.id} className="group">
-                      <div className="flex justify-between items-baseline mb-1.5">
-                        <p className="font-bold text-sm text-foreground opacity-80">
-                          {item.category.icon} {item.category.name}
-                        </p>
-                        <span className="text-[10px] text-stone-400 font-mono">
-                          {formatBRL(item.spent)} / {formatBRL(item.limit)}
-                        </span>
-                      </div>
-                      <ProgressBar
-                        percentage={item.percentage}
-                        status={item.status}
-                      />
-                      <p
-                        className={`text-[10px] mt-1.5 font-bold uppercase tracking-wider ${item.remaining < 0 ? "text-red-400" : "text-stone-400"}`}
-                      >
-                        {item.remaining < 0
-                          ? `⚠️ -${formatBRL(Math.abs(item.remaining))}`
-                          : `${formatBRL(item.remaining)} disponível`}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
-          </div>
+                ))}
+              </div>
+            </SectionCard>
+          )}
         </div>
+        
+        {/* Quick Links */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
+           <SectionCard variant="flat" className="p-6 group hover:border-emerald-500/30 transition-all cursor-pointer">
+              <Link href="/accounts" className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-500">
+                        <Wallet size={24} />
+                    </div>
+                    <div>
+                        <h4 className="font-black text-sm uppercase tracking-tight">Bancos e Contas</h4>
+                        <p className="text-[10px] text-stone-400 uppercase tracking-tighter">Gerencie seus saldos e faturas</p>
+                    </div>
+                </div>
+                <ArrowRight size={20} className="text-stone-300 group-hover:translate-x-1 transition-transform" />
+              </Link>
+           </SectionCard>
+           
+           <SectionCard variant="flat" className="p-6 group hover:border-amber-500/30 transition-all cursor-pointer">
+              <Link href="/transactions" className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-amber-500">
+                        <TrendingDown size={24} />
+                    </div>
+                    <div>
+                        <h4 className="font-black text-sm uppercase tracking-tight">Extrato Detalhado</h4>
+                        <p className="text-[10px] text-stone-400 uppercase tracking-tighter">Histórico completo de lançamentos</p>
+                    </div>
+                </div>
+                <ArrowRight size={20} className="text-stone-300 group-hover:translate-x-1 transition-transform" />
+              </Link>
+           </SectionCard>
+        </section>
       </div>
-    </main>
+    </PageContainer>
   );
 }
