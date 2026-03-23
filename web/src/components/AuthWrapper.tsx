@@ -53,7 +53,7 @@ export default function AuthWrapper({
   // Se estiver na tela de login, renderiza apenas o conteúdo (sem sidebar/nav)
   if (pathname === "/login") {
     return (
-      <main className="w-full min-h-screen">
+      <main className="w-full min-h-screen-dvh">
         {children}
       </main>
     );
@@ -63,12 +63,15 @@ export default function AuthWrapper({
   if (!user) return null;
 
   return (
-    <>
+    <div className="flex flex-col md:flex-row min-h-screen-dvh w-full overflow-hidden">
       {sidebar}
-      <main className="flex-1 overflow-y-auto pb-24 md:pb-0">
+      <main 
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 8rem)' }}
+        className="flex-1 overflow-y-auto md:pb-0"
+      >
         {children}
       </main>
       {bottomNav}
-    </>
+    </div>
   );
 }

@@ -34,7 +34,10 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card/80 dark:bg-stone-900/80 backdrop-blur-2xl border-t border-border py-2 px-4 pb-6 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-[100] md:hidden transition-colors duration-300">
+    <nav 
+      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1.5rem)' }}
+      className="fixed bottom-0 left-0 right-0 bg-card/80 dark:bg-stone-900/80 backdrop-blur-2xl border-t border-border py-4 px-4 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-[100] md:hidden transition-colors duration-300"
+    >
       <div className="flex justify-between items-center max-w-md mx-auto relative">
         <NavItem
           href="/"
