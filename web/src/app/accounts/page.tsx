@@ -7,10 +7,8 @@ import {
     X,
     Edit3,
     Landmark,
-    CreditCard,
     Wallet,
     PlusCircle,
-    Calendar,
     Ticket
   } from "lucide-react";
 import Link from "next/link";
@@ -19,6 +17,7 @@ import { useAccounts } from "../../lib/hooks/useAccounts";
 import { useToast, Toast } from "../../components/Toast";
 import { SkeletonRow } from "../../components/Skeleton";
 import { ConfirmModal } from "../../components/ConfirmModal";
+import { PageContainer, PageHeader, SectionCard } from "../../components/LayoutComponents";
 
 function formatBRL(value: number) {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -105,10 +104,10 @@ export default function ConfigurarContas() {
   }
 
   return (
-    <main className="min-h-screen bg-background text-foreground font-sans p-4 md:p-8 w-full max-w-[1000px] mx-auto flex flex-col mb-20 md:mb-0 transition-colors duration-300">
+    <PageContainer>
       {toast && <Toast message={toast.message} type={toast.type} onDismiss={dismissToast} />}
 
-      <header className="flex items-center justify-between mb-10 mt-2">
+      <PageHeader>
         <div className="flex flex-col">
             <div className="flex items-center gap-2 mb-1">
                 <Link href="/" className="p-1 -ml-1 hover:bg-stone-200 dark:hover:bg-stone-800 rounded-full transition-colors md:hidden">
@@ -116,7 +115,7 @@ export default function ConfigurarContas() {
                 </Link>
                 <span className="text-[10px] font-black tracking-[0.4em] text-stone-400 dark:text-stone-500 uppercase">Parametrização</span>
             </div>
-            <h1 className="text-4xl font-black tracking-tighter uppercase text-foreground leading-[0.9]">Bancos & Contas</h1>
+            <h1 className="text-4xl font-black tracking-tighter uppercase text-foreground leading-none">Bancos & Contas</h1>
         </div>
         <button 
             onClick={() => setIsAdding(!isAdding)}
@@ -125,10 +124,10 @@ export default function ConfigurarContas() {
             {isAdding ? <X size={16} /> : <PlusCircle size={16} />}
             <span className="text-[9px] uppercase tracking-[0.2em]">{isAdding ? 'Cancelar' : 'Nova Conta'}</span>
         </button>
-      </header>
+      </PageHeader>
 
       {isAdding && (
-        <section className="mb-8 bg-card rounded-2xl p-6 shadow-xl border border-border animate-in fade-in slide-in-from-top-4 duration-300">
+        <SectionCard className="mb-8 p-6 animate-in fade-in slide-in-from-top-4 duration-300">
             <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-stone-400 dark:text-stone-500 mb-6 font-mono px-1">Novo Ativo Financeiro</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
@@ -193,10 +192,10 @@ export default function ConfigurarContas() {
                     REGISTRAR NO SISTEMA
                 </button>
             </div>
-        </section>
+        </SectionCard>
       )}
 
-      <section className="flex flex-col gap-6">
+      <section className="flex flex-col gap-10 pb-12">
         {loading ? (
           <div className="flex flex-col gap-3">
             {Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} />)}
@@ -205,9 +204,9 @@ export default function ConfigurarContas() {
           <>
             {/* Debit Section */}
             {accounts.some(a => a.type === 'bank' || a.type === 'cash') && (
-                <div className="flex flex-col gap-1">
-                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500 pl-4 py-1.5">Débito & Saldo</p>
-                    <div className="bg-card rounded-xl px-4 py-1 shadow-sm border border-border flex flex-col">
+                <div className="flex flex-col gap-2">
+                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-stone-400 pl-4">Débito & Saldo</p>
+                    <SectionCard className="px-4 py-1">
                         {accounts.filter(a => a.type === 'bank' || a.type === 'cash').map((acc) => (
                             <AccountRow 
                                 key={acc.id} 
@@ -220,15 +219,15 @@ export default function ConfigurarContas() {
                                 setIdToDelete={setIdToDelete}
                             />
                         ))}
-                    </div>
+                    </SectionCard>
                 </div>
             )}
 
             {/* Credit Section */}
             {accounts.some(a => a.type === 'credit_card') && (
-                <div className="flex flex-col gap-1">
-                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500 pl-4 py-1.5">Crédito & Faturas</p>
-                    <div className="bg-card rounded-xl px-4 py-1 shadow-sm border border-border flex flex-col">
+                <div className="flex flex-col gap-2">
+                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-stone-400 pl-4">Crédito & Faturas</p>
+                    <SectionCard className="px-4 py-1">
                         {accounts.filter(a => a.type === 'credit_card').map((acc) => (
                             <AccountRow 
                                 key={acc.id} 
@@ -241,7 +240,7 @@ export default function ConfigurarContas() {
                                 setIdToDelete={setIdToDelete}
                             />
                         ))}
-                    </div>
+                    </SectionCard>
                 </div>
             )}
           </>
@@ -263,7 +262,7 @@ export default function ConfigurarContas() {
         confirmLabel="REMOVER"
         cancelLabel="VOLTAR"
       />
-    </main>
+    </PageContainer>
   );
 }
 
@@ -271,14 +270,14 @@ function AccountRow({ acc, editingId, editData, setEditData, setEditingId, handl
     const isEditing = editingId === acc.id && editData;
 
     return (
-        <div className="flex justify-between items-center py-1.5 border-b border-stone-50 dark:border-stone-900/40 last:border-0 gap-3 group/row">
+        <div className="flex justify-between items-center py-2 border-b border-stone-50 dark:border-stone-900/40 last:border-0 gap-3 group/row">
             <div className="flex items-center gap-2 flex-1 min-w-0">
                 {!editingId && (
                     <button 
                         onClick={() => setIdToDelete(acc.id)}
                         className="md:opacity-0 md:group-hover/row:opacity-100 opacity-100 text-stone-300 hover:text-rose-500 transition-all p-1 -ml-1 h-7 w-7 flex items-center justify-center shrink-0 bg-stone-50 dark:bg-stone-900/50 rounded-md"
                     >
-                        <X size={14} strokeWidth={3} />
+                      <X size={14} strokeWidth={3} />
                     </button>
                 )}
                 
@@ -320,12 +319,14 @@ function AccountRow({ acc, editingId, editData, setEditData, setEditingId, handl
                         </div>
                     ) : (
                         <div className="flex flex-col min-w-0">
-                            <h4 className="font-black text-xs md:text-sm tracking-tight text-foreground truncate uppercase">{acc.name}</h4>
+                            <h4 className="font-black text-xs md:text-sm tracking-tight text-foreground truncate uppercase leading-tight">{acc.name}</h4>
                             <div className="flex items-center gap-1.5 mt-0.5">
-                                <span className={`text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm ${acc.owner === 'hector' ? 'bg-blue-50 text-blue-500' : acc.owner === 'vitoria' ? 'bg-rose-50 text-rose-500' : 'bg-stone-100 text-stone-500'}`}>{acc.owner === 'shared' ? '🤝 COMPARTILHADO' : acc.owner}</span>
+                                <span className={`text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-sm ${acc.owner === 'hector' ? 'bg-blue-50 text-blue-500' : acc.owner === 'vitoria' ? 'bg-rose-50 text-rose-500' : 'bg-stone-100 text-stone-500 dark:bg-stone-800'}`}>
+                                  {acc.owner === 'shared' ? '🤝 SHARED' : acc.owner}
+                                </span>
                                 {acc.type === 'credit_card' && acc.invoice_due_day > 0 && (
                                     <span className="text-[8px] font-black text-rose-400 uppercase tracking-widest flex items-center gap-1">
-                                        • Vence dia {acc.invoice_due_day}
+                                        • Dia {acc.invoice_due_day}
                                     </span>
                                 )}
                             </div>
@@ -339,7 +340,7 @@ function AccountRow({ acc, editingId, editData, setEditData, setEditingId, handl
                     <div className="flex items-center gap-2 animate-in fade-in slide-in-from-right-4">
                         <div className="flex gap-2 min-w-[180px]">
                             <div className="flex flex-col gap-1 flex-1">
-                                <label className="text-[9px] font-black uppercase tracking-wider text-stone-400">{editData.type === 'credit_card' ? 'Saldo Ativo' : 'Saldo'}</label>
+                                <label className="text-[9px] font-black uppercase tracking-wider text-stone-400">Saldo</label>
                                 <input
                                     type="number"
                                     step="0.01"
@@ -382,7 +383,7 @@ function AccountRow({ acc, editingId, editData, setEditData, setEditingId, handl
                         <div className="flex flex-col items-end">
                             <span className="font-mono text-base font-black tracking-tighter text-foreground">{formatBRL(acc.balance)}</span>
                             {acc.type === 'credit_card' && (
-                                <span className="text-[9px] font-black text-rose-500/80 uppercase tracking-widest leading-none">Aberto</span>
+                                <span className="text-[9px] font-black text-rose-500/80 uppercase tracking-widest leading-none">Em Aberto</span>
                             )}
                         </div>
                         <Edit3 size={16} className="md:opacity-0 md:group-hover/btn:opacity-60 opacity-60 transition-opacity" />

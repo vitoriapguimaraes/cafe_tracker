@@ -19,14 +19,14 @@ import { ThemeToggle } from "./ThemeToggle";
 import { supabase } from "../lib/supabase";
 
 const MENU_ITEMS = [
-  { icon: PlusCircle, label: "Registrar Gasto", href: "/cadastrar", primary: true },
+  { icon: PlusCircle, label: "Registrar Gasto", href: "/add", primary: true },
   { icon: Home, label: "Dashboard", href: "/" },
-  { icon: Receipt, label: "Extrato", href: "/extrato" },
-  { icon: Wallet, label: "Saldos", href: "/saldos" },
-  { icon: Building2, label: "Bancos & Contas", href: "/contas" },
-  { icon: Ticket, label: "Categorias", href: "/categorias" },
-  { icon: TrendingUp, label: "Previsões", href: "/previsoes" },
-  { icon: Settings, label: "Configurações", href: "/configurar" },
+  { icon: Receipt, label: "Extrato", href: "/transactions" },
+  { icon: Wallet, label: "Saldos", href: "/balances" },
+  { icon: Building2, label: "Bancos & Contas", href: "/accounts" },
+  { icon: Ticket, label: "Categorias", href: "/categories" },
+  { icon: TrendingUp, label: "Previsões", href: "/forecasts" },
+  { icon: Settings, label: "Configurações", href: "/settings" },
 ];
 
 export function DesktopSidebar() {
